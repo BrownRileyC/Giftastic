@@ -6,40 +6,48 @@
 
 .tagBar {
     width: 100%;
+    margin: 5% 0;
+    overflow: auto;
 }
 
 .tagButton {
     width: 45%;
     float: left;
-    margin: 1.25%;
+    margin: 2.5%;
     height: 38px;
 }
 
 .addTagBar {
     width: 100%;
+    margin: 5% 0;
 }
 /* Add Tag button doesn't quite line up
 The problem comes from the input text box
 It doesn't want to be the same size as the buttons */
 .tagInput {
     width: 45%;
-    float: left;
-    margin: 1.25%;
+    margin: 2.5%;
+}
+
+.stickyTopBar {
+    margin: 0 0 20px 0;
+    clear: both;
 }
 
 .showMoreButton {
     width: 45%;
     float: left;
-    margin: 1.25%;
+    margin: 2.5%;
     height: 25px;
 }
 
 .favoritesButton {
     width: 45%;
     float: left;
-    margin: 1.25%;
+    margin: 2.5%;
     height: 25px;
 }
+
 
 .stickyBottomBar {
     text-align: center;
