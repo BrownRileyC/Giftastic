@@ -23,7 +23,7 @@ $(document).ready(function(){
         var imageDiv = $('<img>').addClass('gif image'+num);
 
         var manipulateDiv = $('<div>').addClass('manipulateDiv manipulate'+num);
-        var downloadButton = $('<button>').addClass('manipButtons download').text("Download").attr('data-number',num);
+        var downloadButton = $('<button>').addClass('manipButtons download download'+num).attr('data-number',num);
         var favoriteButton = $('<button>').addClass('manipButtons favoriteButton').text("🖤").attr('data-number',num).attr("data-favorite","false");
         manipulateDiv.append(downloadButton, favoriteButton);
         
@@ -41,7 +41,7 @@ $(document).ready(function(){
                 showMoreCounter = 0;
                 person = $(this).attr('data-person');
                 currentPerson = person;
-                var queryUrl = "http://api.giphy.com/v1/gifs/search?q="+ person +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10";
+                var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ person +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10";
                 $.ajax({
                     url: queryUrl,
                     method: "GET"
@@ -51,6 +51,7 @@ $(document).ready(function(){
                         createGifDivs(j);
                         $('.image'+j).attr("src",response.data[j].images.fixed_height_still.url).attr("data-animated", response.data[j].images.fixed_height.url).attr("data-still", response.data[j].images.fixed_height_still.url).attr("data-state", "still");
                         $('.rating'+j).text("Rated: "+response.data[j].rating);
+                        $('.download'+j).html("<a href='"+response.data[j].images.original.url+"' download>Download</a>")
                         // $('.title'+j).text(response.data[j].title);
                         // $('.source'+j).html('<a href:"'+response.data[j].source+'"> Source </a>')
                     };
@@ -134,7 +135,7 @@ $(document).ready(function(){
 
     $('.showMoreButton').on('click', function(){
         showMoreCounter ++;
-        var queryUrl = "http://api.giphy.com/v1/gifs/search?q="+ currentPerson +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10&offset="+showMoreCounter;
+        var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ currentPerson +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10&offset="+showMoreCounter;
         console.log(queryUrl);
         $.ajax({
             url: queryUrl,
