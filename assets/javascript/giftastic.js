@@ -1,5 +1,7 @@
 $(document).ready(function(){
     var person;
+    var currentPerson;
+    var showMoreCounter = 0 
     
     var tagArray = ["Patrick Stewart", "Keanu Reeves", "Peter Dinklage", "Nathan Fillion"];    
     var favoriteStillImageArray = [];
@@ -20,9 +22,9 @@ $(document).ready(function(){
 
         var imageDiv = $('<img>').addClass('gif image'+num);
 
-        var manipulateDiv = $('<div>').addClass('manipulate'+num);
-        var downloadButton = $('<button>').addClass('manipulateDiv download'+num).text("Download");
-        var favoriteButton = $('<button>').addClass('manipulateDiv favoriteButton').text("🖤").attr('data-number',num);
+        var manipulateDiv = $('<div>').addClass('manipulateDiv manipulate'+num);
+        var downloadButton = $('<button>').addClass('manipButtons download').text("Download").attr('data-number',num);
+        var favoriteButton = $('<button>').addClass('manipButtons favoriteButton').text("🖤").attr('data-number',num);
         manipulateDiv.append(downloadButton, favoriteButton);
         
         $('.gif'+num).append(metaDiv, imageDiv, manipulateDiv);
@@ -36,7 +38,9 @@ $(document).ready(function(){
             newTag.attr('data-person',tagArray[i].toLocaleLowerCase());
             $('.tagBar').on('click','.tag'+i, function(){
                 $('.allGifDiv').empty();
+                showMoreCounter = 0;
                 person = $(this).attr('data-person');
+                currentPerson = person;
                 var queryUrl = "http://api.giphy.com/v1/gifs/search?q="+ person +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10";
                 $.ajax({
                     url: queryUrl,
@@ -46,7 +50,7 @@ $(document).ready(function(){
                     for (var j = 0; j < response.data.length; j ++) {
                         createGifDivs(j);
                         $('.image'+j).attr("src",response.data[j].images.fixed_height_still.url).attr("data-animated", response.data[j].images.fixed_height.url).attr("data-still", response.data[j].images.fixed_height_still.url).attr("data-state", "still");
-                        $('.rating'+j).text(response.data[j].rating);
+                        $('.rating'+j).text("Rated: "+response.data[j].rating);
                         // $('.title'+j).text(response.data[j].title);
                         // $('.source'+j).html('<a href:"'+response.data[j].source+'"> Source </a>')
                     };
@@ -81,7 +85,7 @@ $(document).ready(function(){
             $(this).attr("data-state","still");
         };
     });
-
+    // Here find a way to first add the current favorites into the favorites arrays, that way adding a new favorite in a different session doesn't clear your old favorites.
     $('.allGifDiv').on('click','.favoriteButton', function(){
         var gifNumber = $(this).attr('data-number');
         var favoriteRating = $('.rating'+gifNumber).text();
@@ -107,6 +111,24 @@ $(document).ready(function(){
             $('.image'+k).attr("src",favoriteStillImageArray[k]).attr("data-animated", favoriteAnimatedImageArray[k]).attr("data-still", favoriteStillImageArray[k]).attr("data-state", "still");
             $('.rating'+k).text(favoriteRatingArray[k]);
         }
-    })
+    });
+
+    $('.showMoreButton').on('click', function(){
+        showMoreCounter ++;
+        var queryUrl = "http://api.giphy.com/v1/gifs/search?q="+ currentPerson +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10&offset="+showMoreCounter;
+        console.log(queryUrl);
+        $.ajax({
+            url: queryUrl,
+            method: "GET"
+        }).then(function(response){
+            console.log(response);
+            for (var j = 0; j < response.data.length; j ++) {
+                showMoreNumber = j + 10*showMoreCounter
+                createGifDivs(showMoreNumber);
+                $('.image'+showMoreNumber).attr("src",response.data[j].images.fixed_height_still.url).attr("data-animated", response.data[j].images.fixed_height.url).attr("data-still", response.data[j].images.fixed_height_still.url).attr("data-state", "still");
+                $('.rating'+showMoreNumber).text("Rated: "+response.data[j].rating);
+            }
+        });
+    });
     createTagButtons();
 });

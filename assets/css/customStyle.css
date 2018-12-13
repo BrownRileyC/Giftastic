@@ -20,6 +20,7 @@
 .addTagBar {
     width: 100%;
     margin: 5% 0;
+    text-align: center;
 }
 /* Add Tag button doesn't quite line up
 The problem comes from the input text box
@@ -41,13 +42,12 @@ It doesn't want to be the same size as the buttons */
     height: 25px;
 }
 
-.favoritesButton {
+.showFavoritesButton {
     width: 45%;
     float: left;
     margin: 2.5%;
     height: 25px;
 }
-
 
 .stickyBottomBar {
     text-align: center;
@@ -55,4 +55,78 @@ It doesn't want to be the same size as the buttons */
     bottom: 10px;
     right: 10px;
     z-index: 1000;
+}
+.gifDiv {
+    text-align: center;
+}
+
+.gif {
+    max-width: 100%;
+}
+
+.meta {
+    margin: 5px 0;
+    clear: both;
+}
+
+.manipulateDiv {
+    margin: 5px auto;
+}
+
+.manipButtons {
+    float: left;
+    width: 25%;
+    height: 38px;
+}
+
+.download {
+    margin: 0 2.5% 0 22.5%;
+    padding: 1px;
+}
+
+.favoriteButton {
+    margin: 0 22.5% 0 2.5%
+}
+@media screen and (min-width: 600px) {
+    .tagBar {
+        width: 50%;
+        margin: 2% auto;
+        overflow: auto;
+    }
+    .tagButton {
+        width: 20%;
+        float: left;
+        margin: 2.5%;
+        height: 38px;
+    }
+    .addTagBar {
+        width: 50%;
+        margin: 2% auto;
+        text-align: center;
+    }
+    .stickyTopBar {
+        margin: 0 auto 10px;
+        width: 50%;
+        clear: both;
+    }
+
+    .showMoreButton {
+        width: 25%;
+        float: left;
+        margin: 0 5% 0 20%;
+        height: 25px;
+    }
+    
+    .showFavoritesButton {
+        width: 25%;
+        float: left;
+        margin: 0 20% 0 5%;
+        height: 25px;
+    }
+    .gifDiv {
+        text-align: center;
+        width: 40%;
+        float: left;
+        margin: 1% 5%
+    }
 }
