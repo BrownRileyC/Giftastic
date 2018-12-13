@@ -126,6 +126,8 @@ It doesn't want to be the same size as the buttons */
     .gifDiv {
         text-align: center;
         width: 40%;
+        height: 250px;
+        overflow: auto;
         float: left;
         margin: 1% 5%
     }

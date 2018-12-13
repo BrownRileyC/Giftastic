@@ -24,7 +24,7 @@ $(document).ready(function(){
 
         var manipulateDiv = $('<div>').addClass('manipulateDiv manipulate'+num);
         var downloadButton = $('<button>').addClass('manipButtons download').text("Download").attr('data-number',num);
-        var favoriteButton = $('<button>').addClass('manipButtons favoriteButton').text("🖤").attr('data-number',num);
+        var favoriteButton = $('<button>').addClass('manipButtons favoriteButton').text("🖤").attr('data-number',num).attr("data-favorite","false");
         manipulateDiv.append(downloadButton, favoriteButton);
         
         $('.gif'+num).append(metaDiv, imageDiv, manipulateDiv);
@@ -91,14 +91,32 @@ $(document).ready(function(){
         var favoriteRating = $('.rating'+gifNumber).text();
         var favoriteStillImage = $('.image'+gifNumber).attr('data-still');
         var favoriteAnimatedImage = $('.image'+gifNumber).attr('data-animated');
-        favoriteRatingArray.push(favoriteRating);
-        favoriteStillImageArray.push(favoriteStillImage);
-        favoriteAnimatedImageArray.push(favoriteAnimatedImage);
-
         localStorage.clear();
-        localStorage.setItem("ratingList",JSON.stringify(favoriteRatingArray));
-        localStorage.setItem("stillImageList",JSON.stringify(favoriteStillImageArray));
-        localStorage.setItem("animatedImageList",JSON.stringify(favoriteAnimatedImageArray));
+        if ($(this).attr("data-favorite") === "false"){
+            $(this).attr('data-favorite',"true").text('X');
+            favoriteRatingArray.push(favoriteRating);
+            favoriteStillImageArray.push(favoriteStillImage);
+            favoriteAnimatedImageArray.push(favoriteAnimatedImage);
+            console.log("we reached the push");
+
+            localStorage.setItem("ratingList",JSON.stringify(favoriteRatingArray));
+            localStorage.setItem("stillImageList",JSON.stringify(favoriteStillImageArray));
+            localStorage.setItem("animatedImageList",JSON.stringify(favoriteAnimatedImageArray));
+            console.log(favoriteRatingArray);
+            console.log("we passed the setItem");
+            
+        } else if($(this).attr("data-favorite") === "true") {
+            $(this).attr('data-favorite',"false").text('🖤');
+            favoriteRatingArray.splice(favoriteRatingArray.indexOf(favoriteRating),1);
+            favoriteStillImageArray.splice(favoriteStillImageArray.indexOf(favoriteStillImage),1);
+            favoriteAnimatedImageArray.splice(favoriteAnimatedImageArray.indexOf(favoriteAnimatedImage),1);
+
+            localStorage.setItem("ratingList",JSON.stringify(favoriteRatingArray));
+            localStorage.setItem("stillImageList",JSON.stringify(favoriteStillImageArray));
+            localStorage.setItem("animatedImageList",JSON.stringify(favoriteAnimatedImageArray));
+
+        }
+        console.log("We ran past the ifs")
     });
 
     $('.showFavoritesButton').on('click', function(){
@@ -110,6 +128,7 @@ $(document).ready(function(){
             createGifDivs(k);
             $('.image'+k).attr("src",favoriteStillImageArray[k]).attr("data-animated", favoriteAnimatedImageArray[k]).attr("data-still", favoriteStillImageArray[k]).attr("data-state", "still");
             $('.rating'+k).text(favoriteRatingArray[k]);
+            $('.favoriteButton').attr('data-favorite','true').text('X');
         }
     });
 
@@ -130,5 +149,17 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('.goTopButton').on('click', function(){
+        event.preventDefault();
+        $('html, body').animate({scrollTop:0},1000);
+    });
+
     createTagButtons();
+
+    favoriteRatingArray = JSON.parse(localStorage.getItem("ratingList"));
+    favoriteStillImageArray = JSON.parse(localStorage.getItem('stillImageList'));
+    favoriteAnimatedImageArray = JSON.parse(localStorage.getItem("animatedImageList"));
+
+    console.log(favoriteRatingArray);
 });
