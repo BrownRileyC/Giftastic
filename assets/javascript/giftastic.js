@@ -1,15 +1,15 @@
 $(document).ready(function(){
-    var person;
-    var currentPerson;
+    var game;
+    var currentGame;
     var showMoreCounter = 0 
-    
-    var tagArray = ["Patrick Stewart", "Keanu Reeves", "Peter Dinklage", "Nathan Fillion"];    
+    var favoritesExist = false;
+    var downloadURLArray = [];
+    var tagArray = ["God of War", "Pokemon", "Final Fantasy", "Persona"];    
     var favoriteStillImageArray = [];
     var favoriteAnimatedImageArray = [];
     var favoriteRatingArray = [];
 
     // Possibly can create metaDataArray so as to dry up the createGifDivs
-  
     var createGifDivs = function(num) {
         var gifDiv = $('<div>');
         gifDiv.appendTo('.allGifDiv').addClass('gifDiv gif'+num);
@@ -35,13 +35,13 @@ $(document).ready(function(){
             var newTag = $('<button>')
             newTag.appendTo('.tagBar').addClass('tagButton tag'+i);
             newTag.text(tagArray[i]);
-            newTag.attr('data-person',tagArray[i].toLocaleLowerCase());
+            newTag.attr('data-game',tagArray[i].toLocaleLowerCase());
             $('.tagBar').on('click','.tag'+i, function(){
                 $('.allGifDiv').empty();
                 showMoreCounter = 0;
-                person = $(this).attr('data-person');
-                currentPerson = person;
-                var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ person +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10";
+                game = $(this).attr('data-game');
+                currentGame = game;
+                var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ game +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10";
                 $.ajax({
                     url: queryUrl,
                     method: "GET"
@@ -49,9 +49,10 @@ $(document).ready(function(){
                     console.log(response);
                     for (var j = 0; j < response.data.length; j ++) {
                         createGifDivs(j);
+                        downloadURLArray.push(response.data[j].images.original.url)
                         $('.image'+j).attr("src",response.data[j].images.fixed_height_still.url).attr("data-animated", response.data[j].images.fixed_height.url).attr("data-still", response.data[j].images.fixed_height_still.url).attr("data-state", "still");
                         $('.rating'+j).text("Rated: "+response.data[j].rating);
-                        $('.download'+j).html("<a href='"+response.data[j].images.original.url+"' download>Download</a>")
+                        $('.download'+j).html("<a href='"+downloadURLArray[j]+"' download>Download</a>")
                         // $('.title'+j).text(response.data[j].title);
                         // $('.source'+j).html('<a href:"'+response.data[j].source+'"> Source </a>')
                     };
@@ -92,8 +93,11 @@ $(document).ready(function(){
         var favoriteRating = $('.rating'+gifNumber).text();
         var favoriteStillImage = $('.image'+gifNumber).attr('data-still');
         var favoriteAnimatedImage = $('.image'+gifNumber).attr('data-animated');
+        favoritesExist = true;
         localStorage.clear();
+        localStorage.setItem('favoriteStatus', favoritesExist);
         if ($(this).attr("data-favorite") === "false"){
+            
             $(this).attr('data-favorite',"true").text('X');
             favoriteRatingArray.push(favoriteRating);
             favoriteStillImageArray.push(favoriteStillImage);
@@ -129,13 +133,14 @@ $(document).ready(function(){
             createGifDivs(k);
             $('.image'+k).attr("src",favoriteStillImageArray[k]).attr("data-animated", favoriteAnimatedImageArray[k]).attr("data-still", favoriteStillImageArray[k]).attr("data-state", "still");
             $('.rating'+k).text(favoriteRatingArray[k]);
+            // $('.download'+j).html("<a href='"+response.data[j].images.original.url+"' download>Download</a>")
             $('.favoriteButton').attr('data-favorite','true').text('X');
         }
     });
 
     $('.showMoreButton').on('click', function(){
         showMoreCounter ++;
-        var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ currentPerson +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10&offset="+showMoreCounter;
+        var queryUrl = "https://api.giphy.com/v1/gifs/search?q="+ currentGame +"&api_key=ZiPmnqc9Wm82TSbo6W9q9gthL65HkCdi&limit=10&offset="+showMoreCounter;
         console.log(queryUrl);
         $.ajax({
             url: queryUrl,
@@ -157,10 +162,18 @@ $(document).ready(function(){
     });
 
     createTagButtons();
+    favoritesExist = localStorage.getItem("favoriteStatus");
+    var oldFavoriteRatingArray = JSON.parse(localStorage.getItem("ratingList"));
+    var oldFavoriteStillImageArray = JSON.parse(localStorage.getItem('stillImageList'));
+    var oldFavoriteAnimatedImageArray = JSON.parse(localStorage.getItem("animatedImageList"));
 
-    favoriteRatingArray = JSON.parse(localStorage.getItem("ratingList"));
-    favoriteStillImageArray = JSON.parse(localStorage.getItem('stillImageList'));
-    favoriteAnimatedImageArray = JSON.parse(localStorage.getItem("animatedImageList"));
+    if (favoritesExist == true) {
+        for (var l = 0; l < oldFavoriteRatingArray.length; l++) {
+        favoriteRatingArray.push(oldFavoriteRatingArray[l]);
+        favoriteStillImageArray.push(oldFavoriteStillImageArray[l]);
+        favoriteAnimatedImageArray.push(oldFavoriteAnimatedImageArray[l]);
+    }
+}
 
     console.log(favoriteRatingArray);
 });
