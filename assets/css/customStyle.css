@@ -61,6 +61,7 @@ body {
 .gifDiv {
     text-align: center;
     background-color: whitesmoke;
+    vertical-align: middle;
 }
 
 .gif {
