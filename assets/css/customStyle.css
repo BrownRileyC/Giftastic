@@ -26,9 +26,7 @@ body {
     margin: 5% 0;
     text-align: center;
 }
-/* Add Tag button doesn't quite line up
-The problem comes from the input text box
-It doesn't want to be the same size as the buttons */
+
 .tagInput {
     width: 45%;
     margin: 2.5%;
@@ -62,6 +60,7 @@ It doesn't want to be the same size as the buttons */
 }
 .gifDiv {
     text-align: center;
+    background-color: whitesmoke;
 }
 
 .gif {
@@ -78,18 +77,13 @@ It doesn't want to be the same size as the buttons */
 }
 
 .manipButtons {
-    float: left;
+    
     width: 25%;
     height: 38px;
 }
 
-.download {
-    margin: 0 2.5% 0 22.5%;
-    padding: 1px;
-}
-
 .favoriteButton {
-    margin: 0 22.5% 0 2.5%
+    margin: 0 auto
 }
 @media screen and (min-width: 600px) {
     .tagBar {
@@ -123,8 +117,7 @@ It doesn't want to be the same size as the buttons */
     
     .showFavoritesButton {
         width: 25%;
-        float: left;
-        margin: 0 20% 0 5%;
+        margin: 0 auto;
         height: 25px;
     }
     .gifDiv {
@@ -135,8 +128,6 @@ It doesn't want to be the same size as the buttons */
         overflow: auto;
         float: left;
         margin: 1% 5%;
-        border-style: groove;
-        border-color: antiquewhite;
-        border-width: 2px;
+        background-color: whitesmoke;
     }
 }
